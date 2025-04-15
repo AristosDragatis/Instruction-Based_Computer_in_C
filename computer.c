@@ -1,50 +1,13 @@
+#include "computer.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-#define ROW 10
-#define COL 4
-#define SIZE 4
 
 int address[ROW][COL];
 char R1[SIZE];
 char R2[SIZE];
-
-void boot();
-int loadR1(int address[ROW][COL], int num);
-int loadR2(int address[ROW][COL], int num);
-int storeR1(int address[ROW][COL], int num);
-int storeR2(int address[ROW][COL], int num);
-void addRegistersR1();
-void addRegistersR2();
-void subRegistersR1();
-void subRegistersR2();
-void displayR1();
-void displayR2();
-void displayMemory();
-int is_valid_input(char in[20]);
-void randomBits(int x[]);
-void splitCommand(char x[]);
-void allCapitalCheck(char x[]);
-int bin2dec(char x[]);
-void convert(char x[]);
-void reverse(char x[]);
-
-int main()
-{
-    char input[20];
-
-    printf("Welcome, Please enter one of the following\nNote that you must use BOOT first!\n1)BOOT\n2)MEM\n3)LOAD R[1 or 2]\n4)STORE R[1 or 2]\n5)ADD/SUB R[1 or 2]\n6)SHOW R[1 or 2]\n");
-    do
-    {
-        printf("Input here: ");
-        gets(input);
-        is_valid_input(input);
-
-    } while (1);
-    return 0;
-}
 
 void randomBits(int arr[])
 {
@@ -449,19 +412,21 @@ void addRegistersR2()
     // edw metatrepontai apo dyadika se dekadika
     bin2dec(R1);
     bin2dec(R2);
-
+    
     for (i = 0; i < SIZE; i++)
     {
         sum[i] = R1[i] + R2[i];
     }
+
     convert(R2);
     reverse(R2);
     convert(sum);
     reverse(sum);
+
     {
         for (i = 0; i < SIZE; i++)
         {
-            if (sum[i] <= 15)
+            if (sum[i] <= s[i])
             {
                 R2[i] = sum[i];
             }
