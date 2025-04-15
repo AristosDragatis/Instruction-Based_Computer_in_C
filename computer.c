@@ -96,7 +96,7 @@ int is_valid_input(char in[20])
     break;
     case 9:
     {
-        int i;
+        int i = 0;
         if (strncmp(temp, "LOAD R1", 7) == 0 && temp[7] == ' ')
         {
             i = temp[8] - '0';  // convert char to int  
@@ -118,24 +118,17 @@ int is_valid_input(char in[20])
     case 10:
     {
         int n;
-        if (strcmp(temp, "STORE R1  "))
+        if (strncmp(temp, "STORE R1", 8) == 0 && temp[8] == ' ')
         {
-            if ((temp[9] - '0' >= 0 && temp[9] - '0' <= 9))
-            {
-                n = temp[9];
-                splitCommand(temp);
-                storeR1(address, n);
-            }
+            n = temp[9] - '0';
+            splitCommand(temp);
+            storeR1(address, n);
         }
-        else if(strcmp(temp, "STORE R2  "))
+        else if(strncmp(temp, "STORE R2", 8) == 0 && temp[8] == ' ')
         {
-            int n;
-            if((temp[9] - '0' >= 0 && temp[9] - '0' <= 9))
-            {
-                n = temp[9];
-                splitCommand(temp);
-                storeR2(address, n);
-            }
+            n = temp[9] - '0';
+            splitCommand(temp);
+            storeR2(address, n);
         }
         else
         {
@@ -239,8 +232,8 @@ void displayMemory(int address[][COL])
 void splitCommand(char x[])
 {
     int i, icount = 0;
-    char entoli[100];
-    char orisma[100];
+    char entoli[50];
+    char orisma[50];
     int flag = 0;
     for (i = 0; i < strlen(x); i++)
     {
@@ -287,63 +280,64 @@ int loadR1(int address[ROW][COL], int num)
 {
     int j;
     if(num < 0 || num >= ROW) 
-        return 0;
-
-    for (j = 0; j < COL; j++)
     {
-        R1[j] = address[num][j];
+        printf("Invalid memory location [0 - 9]\n");
+        return 0;
     }
-    return 1;
+    else{
+        for (j = 0; j < COL; j++)
+        {
+            R1[j] = address[num][j];
+        }
+        return 1;
+    }
 }
 
 int loadR2(int address[ROW][COL], int num)
 {
     int j;
     if (num < 0 || num >= ROW) 
-        return 0;
-
-    for(j=0;j<COL;j++)
     {
-        R2[j] = address[num][j];
+        printf("Invalid memory location [0 - 9]\n");
+        return 0;
     }
-    return 1;
+    else{
+        for(j=0;j<COL;j++)
+        {
+            R2[j] = address[num][j];
+        }
+        return 1;
+    }
 }
 
 int storeR1(int address[][COL], int num)
 {
-    int i, j;
-    if (num >= 0 && num <= 9)
-    {
-        for (i = num; i < ROW; i++)
-        {
-            R1[i] = address[i][j];
-        }
-        return 1;
-    }
-    else
-    {
+    int j;
+    if(num < 0 || num >= ROW){
+        printf("Invalid memory location [0-9]\n");
         return 0;
     }
+    for(j=0;j<COL;j++)
+    {
+        address[num][j] = R1[j];
+    }
+    return 1;
 }
 
 int storeR2(int address[][COL], int num)
 {
-    int i, j;
-    if (num >= 0 && num <= 9)
+    int j;
+    if(num < 0 || num >= ROW)
     {
-        for (i = 0; i < ROW; i++)
-        {
-            for (j = 0; j < COL; j++)
-            {
-                address[i][j] = R2[num];
-            }
-        }
-        return 1;
-    }
-    else
-    {
+        printf("Invalid memory location [0-9]\n");
         return 0;
     }
+
+    for(j=0;j<COL;j++)
+    {
+        address[num][j] = R2[j];
+    }
+    return 1;
 }
 
 void addRegistersR1()
@@ -367,7 +361,7 @@ void addRegistersR1()
         if (sum[i] <= s[i])
         {
             R1[i] = sum[i];
-            printf("%d", s[i]);
+            printf("%d", R1[i]);
         }
 
         else
@@ -408,6 +402,7 @@ void addRegistersR2()
             if (sum[i] <= s[i])
             {
                 R2[i] = sum[i];
+                printf("%4d", R2[i]);
             }
             else
             {
