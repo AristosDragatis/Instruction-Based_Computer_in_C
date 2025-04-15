@@ -3,18 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
 #include <math.h>
 
 int address[ROW][COL];
 char R1[SIZE];
 char R2[SIZE];
 
-void randomBits(int arr[])
-{
-    int x = rand() % 16;
-    if (x < 0)
-        x = -x;
-}
 
 void allCapitalCheck(char x[])
 {
@@ -23,8 +18,7 @@ void allCapitalCheck(char x[])
     {
         if (x[i] >= 'a' && x[i] <= 'z')
         {
-            printf("Letters must be all capital\n");
-            break;
+            x[i] -= 32;
         }
     }
 }
@@ -103,16 +97,15 @@ int is_valid_input(char in[20])
     case 9:
     {
         int i;
-        if (strcmp(temp, "LOAD R1  "))
+        if (strncmp(temp, "LOAD R1", 7) == 0 && temp[7] == ' ')
         {
-            i = temp[8];
+            i = temp[8] - '0';  // convert char to int  
             splitCommand(temp);
             loadR1(address, i);
         }
-        else if (strcmp(temp, "LOAD R2  "))
+        else if (strncmp(temp, "LOAD R2", 7) == 0 && temp[7] == ' ')
         {
-            int i;
-            i = temp[8];
+            i = temp[8] - '0';
             splitCommand(temp);
             loadR2(address, i);
         }
@@ -160,7 +153,7 @@ int is_valid_input(char in[20])
     }
 }
 
-//edw ekinneitai o ypologisths kai gemizei me tyxaies times
+// booting the pc and giving it random values [0 or 1]
 void boot()
 {
     srand(time(NULL));
@@ -184,7 +177,7 @@ void boot()
     }
 }
 
-//antistrofi twn bits
+//reversing bits
 void reverse(char x[])
 {
     int i;
@@ -197,7 +190,7 @@ void reverse(char x[])
     }
 }
 
-//apo dekadiko se dyadiko
+// decimal to binary 
 void convert(char x[])
 {
     int i = 0;
@@ -212,7 +205,7 @@ void convert(char x[])
     reverse(x);
 }
 
-// apo dyadiko se dekadiko
+// binary to decimal  
 int bin2dec(char x[])
 {
     int count = 0;
@@ -227,7 +220,7 @@ int bin2dec(char x[])
     return count;
 }
 
-// Edw emfanizetai to periexomeno tou pinaka address
+// printing Memory 2D-array 
 void displayMemory(int address[][COL])
 {
     int i, j;
@@ -242,7 +235,7 @@ void displayMemory(int address[][COL])
     }
 }
 
-// edw ginetai o elegxos tou input an einai entoli h orisma
+// check if command or definition 
 void splitCommand(char x[])
 {
     int i, icount = 0;
@@ -292,42 +285,28 @@ void splitCommand(char x[])
 
 int loadR1(int address[ROW][COL], int num)
 {
-    int i, j;
-    if (num >= 0 && num <= 9)
-    {
-        for (i = 0; i < ROW; i++)
-        {
-            for (j = 0; j < COL; j++)
-            {
-                R1[num] = address[i][j];
-            }
-        }
-        return 1;
-    }
-    else
-    {
+    int j;
+    if(num < 0 || num >= ROW) 
         return 0;
+
+    for (j = 0; j < COL; j++)
+    {
+        R1[j] = address[num][j];
     }
+    return 1;
 }
 
 int loadR2(int address[ROW][COL], int num)
 {
-    int i, j;
-    if (num >= 0 && num <= 9)
-    {
-        for(i=0;i<ROW;i++)
-        {
-             for(j=0;j<COL;j++)
-             {
-                 R2[i*ROW+j] = address[num][j];
-             }
-        }
-        return 1;
-    }
-    else
-    {
+    int j;
+    if (num < 0 || num >= ROW) 
         return 0;
+
+    for(j=0;j<COL;j++)
+    {
+        R2[j] = address[num][j];
     }
+    return 1;
 }
 
 int storeR1(int address[][COL], int num)
@@ -372,7 +351,7 @@ void addRegistersR1()
     int i;
     char sum[SIZE];
     char s[SIZE] = {1, 1, 1, 1};
-    // edw metatrepontai apo dyadika se dekadika
+
     bin2dec(R1);
     bin2dec(R2);
     for (i = 0; i < SIZE; i++)
@@ -409,7 +388,7 @@ void addRegistersR2()
     int i;
     char sum[SIZE];
     char s[SIZE] = {1, 1, 1, 1};
-    // edw metatrepontai apo dyadika se dekadika
+
     bin2dec(R1);
     bin2dec(R2);
     
@@ -449,7 +428,7 @@ void subRegistersR1()
 {
     int i;
     char res[SIZE];
-    char r[SIZE] = {0};
+    char r[SIZE] = {0, 0, 0, 0};
     bin2dec(R1);
     bin2dec(R2);
     for (i = 0;i<SIZE;i++)
