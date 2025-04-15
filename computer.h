@@ -1,6 +1,6 @@
 /* Header file */
-#ifndef COMPUTER.H
-#define COMPUTER.H
+#ifndef COMPUTER
+#define COMPUTER
 
 #define ROW 10
 #define COL 4
@@ -24,7 +24,6 @@ void displayR1();
 void displayR2();
 void displayMemory();
 int is_valid_input(char in[20]);
-void randomBits(int x[]);
 void splitCommand(char x[]);
 void allCapitalCheck(char x[]);
 int bin2dec(char x[]);
