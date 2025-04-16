@@ -151,8 +151,7 @@ int is_valid_input(char in[20])
 void boot()
 {
     srand(time(NULL));
-    int i, j, x;
-    x = rand() % 16;
+    int i, j;
 
     for (i = 0; i < ROW; i++)
     {
@@ -168,48 +167,6 @@ void boot()
     }
 }
 
-//reversing bits
-void reverse(char x[])
-{
-    int i;
-    for (i = 0; i < strlen(x) / 2; i++)
-    {
-        char c1 = x[i];
-        char c2 = x[strlen(x) - i - 1];
-        x[i] = c2;
-        x[strlen(x) - i - 1] = c1;
-    }
-}
-
-// decimal to binary 
-void convert(char x[])
-{
-    int i = 0;
-    int d = 4;
-    while (d != 0)
-    {
-        int b = d % 2;
-        d = d / 2;
-        x[i++] = b + '0';
-    }
-    x[i] = 0;
-    reverse(x);
-}
-
-// binary to decimal  
-int bin2dec(char x[])
-{
-    int count = 0;
-    int i;
-    for (i = 0; i < strlen(x); i++)
-    {
-        if (x[i] == '1')
-            count = 2 * count + 1;
-        else
-            count = 2 * count;
-    }
-    return count;
-}
 
 // printing Memory 2D-array 
 void displayMemory(int address[][COL])
@@ -308,7 +265,7 @@ int loadR2(int address[ROW][COL], int num)
     }
 }
 
-int storeR1(int address[][COL], int num)
+int storeR1(int address[ROW][COL], int num)
 {
     int j;
     if(num < 0 || num >= ROW){
@@ -322,7 +279,7 @@ int storeR1(int address[][COL], int num)
     return 1;
 }
 
-int storeR2(int address[][COL], int num)
+int storeR2(int address[ROW][COL], int num)
 {
     int j;
     if(num < 0 || num >= ROW)
@@ -381,104 +338,127 @@ void addRegistersR1()
 
 void addRegistersR2()
 {
-    int i;
-    char sum[SIZE];
-    char s[SIZE] = {1, 1, 1, 1};
+    int i, val1=0, val2=0;
+    int sum;
     
+    // convert to int
+    for(i=0;i<SIZE;i++){
+        val1 = val1 * 2 + R1[i];
+        val2 = val2 * 2 + R2[i];
+    }
+
     for (i = 0; i < SIZE; i++)
     {
-        sum[i] = R1[i] + R2[i];
+        sum = val2 + val1;  // sum registers
     }
 
 
-    for (i = 0; i < SIZE; i++)
+    for(i=0;i<SIZE;i++)
     {
-        if (sum[i] <= s[i])
-        {
-            R2[i] = sum[i];
-            printf("%4d", R2[i]);
-        }
-        else
-        {
+        if(sum > 15){
             printf("Sum is over 15\n");
             printf("R2 = ");
-            for (i = 0; i < SIZE; i++)
-            {
+            for(i=0;i<SIZE;i++){
                 R2[i] = 0;
                 printf("%4d", R2[i]);
             }
             printf("\n");
+        }else{
+            for(i=SIZE-1; i>= 0;i--){
+                R2[i] = sum % 2;
+                sum = sum/2;
+            }
+            printf("R2 = ");
+            for (i = 0; i < SIZE; i++)
+            {
+                printf("%4d",R2[i]);
+            }
         }
-    }
+    } 
 }
+
 
 void subRegistersR1()
 {
-    int i;
-    char res[SIZE];
-    char r[SIZE] = {0, 0, 0, 0};
-    bin2dec(R1);
-    bin2dec(R2);
-    for (i = 0;i<SIZE;i++)
-    {
-        res[i] = R1[i] - R2[i];
+    int i, val1=0, val2=0;
+    int res;
+    
+    // convert from char to int (left-shift)
+    for(i=0;i<SIZE;i++){
+        val1 = val1 * 2 + R1[i];
+        val2 = val2 * 2 + R2[i];
     }
-    convert(res);
-    if (res[i] > 0)
+
+    for (i = 0; i < SIZE; i++)
     {
-        for (i = SIZE; i >= 0; i--)
-        {
-            if (res[i] > r[i])
-            {
-                R1[i] = res[i];
+        res = val1 - val2;  // subtract registers
+    }
+
+
+    for(i=0;i<SIZE;i++)
+    {
+        if(res < 0){
+            printf("Subtraction is less than 0\n");
+            printf("R1 = ");
+            for(i=0;i<SIZE;i++){
+                R1[i] = 0;
+                printf("%4d", R1[i]);
             }
-            else
+            printf("\n");
+        }else{
+            for(i=SIZE-1; i>= 0;i--){
+                R1[i] = res % 2;
+                res = res/2;
+            }
+            printf("R1 = ");
+            for (i = 0; i < SIZE; i++)
             {
-                printf("Result is less that 0\n");
-                printf("R1 = ");
-                for (i = SIZE; i > 0; i--)
-                {
-                    R1[i] = 1;
-                    printf("%4d", R1[i]);
-                }
+                printf("%4d",R1[i]);
             }
         }
-        printf("\n");
-    }
+    } 
 }
 
 void subRegistersR2()
 {
-    int i;
-    char res[SIZE];
-    char r[SIZE] = {0};
-    bin2dec(R1);
-    bin2dec(R2);
+
+    int i, val1=0, val2=0;
+    int res;
+    
+    // convert from char to int (left-shift)
+    for(i=0;i<SIZE;i++){
+        val1 = val1 * 2 + R1[i];
+        val2 = val2 * 2 + R2[i];
+    }
+
+    for (i = 0; i < SIZE; i++)
+    {
+        res = val2 - val1;  // subtract registers
+    }
+
+
     for(i=0;i<SIZE;i++)
     {
-        res[i] = R2[i] - R1[i];
-    }
-    convert(res);
-    {
-        for (i = 0;i >= SIZE;i--)
-        {
-            if (res[i] > r[i])
-            {
-                R2[i] = res[i];
+        if(res < 0){
+            printf("Subtraction is less than 0\n");
+            printf("R2 = ");
+            for(i=0;i<SIZE;i++){
+                R2[i] = 0;
+                printf("%4d", R2[i]);
             }
-            else
+            printf("\n");
+        }else{
+            for(i=SIZE-1; i>= 0;i--){
+                R2[i] = res % 2;
+                res = res/2;
+            }
+            printf("R2 = ");
+            for (i = 0; i < SIZE; i++)
             {
-                printf("Result is less than 0\n");
-                printf("R2 = ");
-                for (i = SIZE; i > 0; i--)
-                {
-                    R2[i] = 1;
-                    printf("%4d", R2[i]);
-                }
+                printf("%4d",R2[i]);
             }
         }
-        printf("\n");
-    }
+    } 
 }
 
 void displayR1()

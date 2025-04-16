@@ -8,8 +8,8 @@
 
 // declarations
 extern int address[ROW][COL];
-extern char R1[SIZE];
-extern char R2[SIZE];
+extern char R1[5];
+extern char R2[5];
 
 void boot();
 int loadR1(int address[ROW][COL], int num);
@@ -22,13 +22,10 @@ void subRegistersR1();
 void subRegistersR2();
 void displayR1();
 void displayR2();
-void displayMemory();
+void displayMemory(int address[][COL]);
 int is_valid_input(char in[20]);
 void splitCommand(char x[]);
 void allCapitalCheck(char x[]);
-int bin2dec(char x[]);
-void convert(char x[]);
-void reverse(char x[]);
 
 #endif
 
