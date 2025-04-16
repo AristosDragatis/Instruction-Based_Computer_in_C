@@ -7,8 +7,8 @@
 #include <math.h>
 
 int address[ROW][COL];
-char R1[SIZE];
-char R2[SIZE];
+char R1[5];
+char R2[5];
 
 
 void allCapitalCheck(char x[])
@@ -147,15 +147,13 @@ int is_valid_input(char in[20])
 }
 
 // booting the pc and giving it random values [0 or 1]
+// random values to address and R1, R2 registers 
 void boot()
 {
     srand(time(NULL));
     int i, j, x;
     x = rand() % 16;
-    if (x < 0)
-    {
-        x = -x;
-    }
+
     for (i = 0; i < ROW; i++)
     {
         for (j = 0; j < COL; j++)
@@ -165,7 +163,7 @@ void boot()
     }
     for (i = 0; i < SIZE; i++)
     {
-        R1[i] = rand() % 2;
+        R1[i] = rand() % 2; 
         R2[i] = rand() % 2;
     }
 }
@@ -342,79 +340,74 @@ int storeR2(int address[][COL], int num)
 
 void addRegistersR1()
 {
-    int i;
-    char sum[SIZE];
-    char s[SIZE] = {1, 1, 1, 1};
-
-    bin2dec(R1);
-    bin2dec(R2);
-    for (i = 0; i < SIZE; i++)
-    {
-        sum[i] = R1[i] + R2[i];
+    int i, val1=0, val2=0;
+    int sum;
+    
+    // convert to int
+    for(i=0;i<SIZE;i++){
+        val1 = val1 * 2 + R1[i];
+        val2 = val2 * 2 + R2[i];
     }
-    convert(R1);
-    reverse(R1);
-    convert(sum);
-    reverse(sum);
+
     for (i = 0; i < SIZE; i++)
     {
-        if (sum[i] <= s[i])
-        {
-            R1[i] = sum[i];
-            printf("%d", R1[i]);
-        }
+        sum = val1 + val2;  // sum registers
+    }
 
-        else
-        {
+
+    for(i=0;i<SIZE;i++)
+    {
+        if(sum > 15){
             printf("Sum is over 15\n");
             printf("R1 = ");
-            for (i = 0; i < SIZE; i++)
-            {
+            for(i=0;i<SIZE;i++){
                 R1[i] = 0;
                 printf("%4d", R1[i]);
             }
             printf("\n");
+        }else{
+            for(i=SIZE-1; i>= 0;i--){
+                R1[i] = sum % 2;
+                sum = sum/2;
+            }
+            printf("R1= ");
+            for (i = 0; i < SIZE; i++)
+            {
+                printf("%4d",R1[i]);
+            }
         }
     }
 }
+
 void addRegistersR2()
 {
     int i;
     char sum[SIZE];
     char s[SIZE] = {1, 1, 1, 1};
-
-    bin2dec(R1);
-    bin2dec(R2);
     
     for (i = 0; i < SIZE; i++)
     {
         sum[i] = R1[i] + R2[i];
     }
 
-    convert(R2);
-    reverse(R2);
-    convert(sum);
-    reverse(sum);
 
+    for (i = 0; i < SIZE; i++)
     {
-        for (i = 0; i < SIZE; i++)
+        if (sum[i] <= s[i])
         {
-            if (sum[i] <= s[i])
+            R2[i] = sum[i];
+            printf("%4d", R2[i]);
+        }
+        else
+        {
+            printf("Sum is over 15\n");
+            printf("R2 = ");
+            for (i = 0; i < SIZE; i++)
             {
-                R2[i] = sum[i];
+                R2[i] = 0;
                 printf("%4d", R2[i]);
             }
-            else
-            {
-                printf("Sum is over 15\n");
-                printf("R2 = ");
-                for (i = 0; i < SIZE; i++)
-                {
-                    R2[i] = 0;
-                    printf("%4d", R2[i]);
-                }
-                printf("\n");
-            }
+            printf("\n");
         }
     }
 }
