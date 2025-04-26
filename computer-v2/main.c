@@ -1,21 +1,28 @@
 #include "computer.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
+#define MAX_INPUT_SIZE 100
 
 
 int main(){
-    char *input = (char *)malloc(15 * sizeof(char));
+    char input[MAX_INPUT_SIZE];
 
     menu();
-    if(input == NULL)
+    printf("Enter instruction: ");
+
+    if(fgets(input, sizeof(input), stdin) == NULL)
     {
-        printf("Allocation failed\n");
-        exit(0);
-    }else{
-        printf("Enter input here: ");
-        fgets(input, sizeof(input), stdin);
-        // is_valid_input(input);
+        perror("Input Error");
+        exit(EXIT_FAILURE);
     }
-    free(input);
+    input[strcspn(input, "\n")] = '\0'; // cut \n at the end
+    Instruction *inst = parseInstruction(input);
+    if(inst != NULL)
+    {
+        printInstruction(inst); 
+        destroy(inst);
+    }
     return 0;
 }
