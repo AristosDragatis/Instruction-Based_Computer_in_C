@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#define MAX_INPUT_SIZE 100
 
 
 void menu()
@@ -53,9 +54,15 @@ int validateInput(char *name,char *arg,char *i_str){
 
 
 Instruction *parseInstruction(char *input){
-    char *name = strtok(input, " \n");
+
+    char tempInput[MAX_INPUT_SIZE];
+    strncpy(tempInput, input, MAX_INPUT_SIZE);
+    tempInput[MAX_INPUT_SIZE-1] = '\0'; // always null-terminate
+
+    char *name = strtok(tempInput, " \n");
     char *arg = strtok(NULL, "  \n");
     char *i_str = strtok(NULL, " \n");
+    
 
     if(!validateInput(name, arg, i_str))
     {
@@ -80,6 +87,17 @@ Instruction *createInstruction(char *name, char *arg, int i)
     inst->arg = strdup(arg);
     inst->i = i;
     inst->handler = NULL;
+
+
+    if (strcmp(name, "boot") == 0) {
+        inst->handler = boot;
+    } else if (strcmp(name, "load") == 0) {
+        if (strcmp(arg, "r1") == 0) inst->handler = loadR1;
+        else if (strcmp(arg, "r2") == 0) inst->handler = loadR2;
+    } else if (strcmp(name, "store") == 0) {
+        if (strcmp(arg, "r1") == 0) inst->handler = storeR1;
+        else if (strcmp(arg, "r2") == 0) inst->handler = storeR2;
+    }
 
     return inst;
 }
@@ -111,4 +129,9 @@ void allLowerCheck(char *x)
     }
 }
 
+void boot(){
+    srand((unsigned)time(NULL));
+    char **address = 
+
+}
 
