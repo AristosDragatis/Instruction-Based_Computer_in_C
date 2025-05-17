@@ -80,7 +80,6 @@ This initializes the memory and registers with random values.
 | `ADD R1`      | Add `R1` and `R2`, store result in `R1`      |
 | `STORE R2 5`  | Store contents of `R2` into memory row 5     |
 | `SHOW R1`     | Display contents of register `R1`            |
-|---------------|---------------------------------------------|
 
 **Commands must be properly spaced based on the example commands above.**
 
