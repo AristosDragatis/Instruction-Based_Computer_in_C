@@ -50,3 +50,33 @@ This allows the project to simulate a **mini interpreter**, while teaching modul
 
 ---
 
+**Getting Started**
+
+### How to Run
+
+**1. Compile the program:**
+   ```terminal
+   gcc main.c computer.c -o main
+   ```
+
+**2. Run it:**
+ ```terminal
+ ./main
+ ```
+
+**3. Before using commands like LOAD, STORE, or ADD, you must first type:**
+ ```
+ BOOT or boot
+ ```
+This initializes the memory and registers with random values.
+
+**Example Commands**
+BOOT           # initialize system
+MEM            # show current memory
+LOAD R1 2      # load memory row 2 into register R1
+ADD R1         # add R1 and R2, result in R1
+STORE R2 5     # store R2 contents to memory row 5
+SHOW R1        # display contents of R1
+
+**Commands must be properly spaced based on the example commands above.**
+
