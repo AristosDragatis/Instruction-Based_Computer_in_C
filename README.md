@@ -3,7 +3,7 @@
 ## Description
 
 This project simulates a very simple virtual computer built entirely in C.  
-The user interacts through the terminal by typing simple textual commands (e.g. `LOAD R1 3`, `ADD R1`, `MEM`).  
+The user interacts through the terminal by typing simple textual commands (e.g. `BOOT`, `LOAD R1 2`, `ADD R1`, `MEM`).  
 The system supports basic memory and register operations, mimicking low-level behavior.
 
 > This project is being actively rewritten and improved. The current version is the **base implementation (Version 1)**, and work has begun on **Version 2**, which introduces pointers, dynamic memory, structs, and handler-based execution.
