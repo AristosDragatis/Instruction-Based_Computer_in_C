@@ -71,12 +71,16 @@ This allows the project to simulate a **mini interpreter**, while teaching modul
 This initializes the memory and registers with random values.
 
 **Example Commands**
-BOOT           # initialize system
-MEM            # show current memory
-LOAD R1 2      # load memory row 2 into register R1
-ADD R1         # add R1 and R2, result in R1
-STORE R2 5     # store R2 contents to memory row 5
-SHOW R1        # display contents of R1
+
+| Command       | Description                                 |
+|---------------|---------------------------------------------|
+| `BOOT`        | Initialize memory and registers              |
+| `MEM`         | Display current memory contents              |
+| `LOAD R1 2`   | Load memory row 2 into register `R1`         |
+| `ADD R1`      | Add `R1` and `R2`, store result in `R1`      |
+| `STORE R2 5`  | Store contents of `R2` into memory row 5     |
+| `SHOW R1`     | Display contents of register `R1`            |
+|---------------|---------------------------------------------|
 
 **Commands must be properly spaced based on the example commands above.**
 
