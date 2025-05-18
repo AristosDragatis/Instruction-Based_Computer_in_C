@@ -18,101 +18,52 @@ void menu()
 
 
 // validate user input 
-int validateInput(char *name,char *arg,char *i_str){
-    //allLowerCheck(name);
-    //allLowerCheck(arg);
-
-    // if no user input print invalid input
-    if(name == NULL)
-    {
+int validateInput(char *name, char *arg, char *i_str) {
+    if (name == NULL) {
         printf("Invalid Input!\n");
         return 0;
     }
 
-    // show menu
-    if(strcmp(name, "menu") == 0)
-    {
-        menu();
+    // Check for quit command
+    if (strcmp(name, "q") == 0 || strcmp(name, "Q") == 0 || strcmp(name, "quit") == 0) {
+        return 1; // allow quit, handler will exit
     }
 
-    // exiting program functionality
-    if(strcmp(name, "q") == 0 || strcmp(name, "Q") == 0 || strcmp(name, "quit") == 0)
-    {
-        printf("Exiting...\n");
-        exit(-1);
+    // Check for menu command
+    if (strcmp(name, "menu") == 0) {
+        return 1; // allow menu, handler will print menu
     }
 
-    // load and store 
-    if(strcmp(name, "load") == 0 || strcmp(name, "store") == 0)
-    {
-        if(arg == NULL || i_str == NULL)
-        {
+    // load and store require 3 tokens
+    if (strcmp(name, "load") == 0 || strcmp(name, "store") == 0) {
+        if (arg == NULL || i_str == NULL) {
             printf("LOAD and STORE require 3 tokens eg.[load r1 1]\n");
             return 0;
         }
+        return 1;
     }
 
-    // add, sub and show
-    if(strcmp(name, "add") == 0 || strcmp(name, "sub") == 0 || strcmp(name, "show") == 0)
-    {
-        if(arg == NULL || i_str != NULL)
-        {
-            printf("ADD, SUB, SHOW require 2 tokens eg.[add r1]");
+    // add, sub, show require 2 tokens
+    if (strcmp(name, "add") == 0 || strcmp(name, "sub") == 0 || strcmp(name, "show") == 0) {
+        if (arg == NULL || i_str != NULL) {
+            printf("ADD, SUB, SHOW require 2 tokens eg.[add r1]\n");
             return 0;
         }
-        if(strcmp(name, "add") == 0)
-        {
-            if(strcmp(arg, "r1") == 0){
-                //addRegistersR1();
-            }
-            else if(strcmp(arg, "r2") == 0){
-                //addRegistersR2();
-            }
-        }
-        if(strcmp(name, "sub") == 0)
-        {
-            if(strcmp(arg, "r1") == 0){
-                //subRegistersR1();
-            }
-            else if(strcmp(arg, "r2") == 0){
-                //subRegistersR2();
-            }
-        }
-        //functionality for show R1 and R2
-        if(strcmp(name, "show") == 0)
-        {
-            if(strcmp(arg, "r1") == 0)
-            {
-                displayR1();
-            }
-            else if(strcmp(arg, "r2") == 0)
-            {
-                displayR2();
-            }
-        }
+        return 1;
     }
 
-    // boot and mem
-    if(strcmp(name, "boot") == 0 || strcmp(name, "mem") == 0)
-    {
-        if(arg != NULL || i_str != NULL)
-        {
+    // boot and mem require only the command
+    if (strcmp(name, "boot") == 0 || strcmp(name, "mem") == 0) {
+        if (arg != NULL || i_str != NULL) {
             printf("boot and mem do not require any other tokens\n");
             return 0;
-        }else
-        {
-            if(strcmp(name, "boot") == 0)
-            {
-                boot();
-            }
-            else if(strcmp(name, "mem") == 0)
-            {
-                displayMemory(address);
-            }
         }
+        return 1;
     }
-    return 1;
 
+    // If command is not recognized
+    printf("Unknown command: %s\n", name);
+    return 0;
 }
 
 Instruction *parseInstruction(char *input){
@@ -150,6 +101,25 @@ Instruction *createInstruction(char *name, char *arg, int i)
     inst->i = i;
     inst->handler = NULL;
 
+    if(strcmp(name, "boot") == 0)
+        inst->handler = handle_boot;
+    else if(strcmp(name, "mem") == 0)
+        inst->handler = handle_mem;
+    else if(strcmp(name, "load") == 0)
+        inst->handler = handle_load;
+    else if(strcmp(name, "store") == 0)
+        inst->handler = handle_store;
+    else if(strcmp(name, "add") == 0)
+        inst->handler = handle_add;
+    else if(strcmp(name, "sub") == 0)
+        inst->handler = handle_sub;
+    else if(strcmp(name, "show") == 0)
+        inst->handler = handle_show;
+    else if(strcmp(name, "q") == 0 || strcmp(name, "Q") == 0)
+        inst->handler = handle_quit;
+    else if(strcmp(name, "menu") == 0)
+        inst->handler = handle_menu;
+
     return inst;
 }
 
@@ -175,6 +145,27 @@ void boot()
 {
     unsigned int seed = time(NULL);
     printf("Booting...\n");
+
+    // Free previous memory if already allocated
+    if(address){
+        for(int i=0;i<10;i++)
+        {
+            free(address[i]);
+        }
+        free(address);
+        address = NULL;
+    }
+
+    if(R1){
+        free(R1);
+        R1 = NULL;
+    }
+    if(R2){
+        free(R2);
+        R2 = NULL;
+    }
+
+
     // allocating memory space for address 
     address = malloc(10 * sizeof(int*));
     for(int i=0;i<10;i++)
@@ -233,6 +224,51 @@ void displayR2()
 }
 
 
+int loadR1(int **address, int num) {
+    // TODO: implement logic
+    printf("Called loadR1 with num=%d\n", num);
+    return 0;
+}
+
+int loadR2(int **address, int num) {
+    // TODO: implement logic
+    printf("Called loadR2 with num=%d\n", num);
+    return 0;
+}
+
+int storeR1(int **address, int num) {
+    // TODO: implement logic
+    printf("Called storeR1 with num=%d\n", num);
+    return 0;
+}
+
+int storeR2(int **address, int num) {
+    // TODO: implement logic
+    printf("Called storeR2 with num=%d\n", num);
+    return 0;
+}
+
+void addRegistersR1() {
+    // TODO: implement logic
+    printf("Called addRegistersR1\n");
+}
+
+void addRegistersR2() {
+    // TODO: implement logic
+    printf("Called addRegistersR2\n");
+}
+
+void subRegistersR1() {
+    // TODO: implement logic
+    printf("Called subRegistersR2\n");
+}
+
+void subRegistersR2() {
+    // TODO: implement logic
+    printf("Called subRegistersR2\n");
+}
+
+
 void allLowerCheck(char *x)
 {
     int size = strlen(x);
@@ -243,4 +279,67 @@ void allLowerCheck(char *x)
             x[i] += 32;
         }
     }
+}
+
+// handler function implementations
+void handle_boot(char *arg, int i) { boot(); }
+void handle_mem(char *arg, int i) { displayMemory(address); }
+
+//load
+void handle_load(char *arg, int i){
+    if(arg && strcmp(arg, "r1") == 0)
+        loadR1(address, i);
+    else if(arg && strcmp(arg, "r2") == 0)
+        loadR2(address, i);
+    else
+        printf("Unknown register for load: %s\n", arg);
+}
+
+//store 
+void handle_store(char *arg, int i) {
+    if(arg && strcmp(arg, "r1") == 0)
+        storeR1(address, i);
+    else if(arg && strcmp(arg, "r2") == 0)
+        storeR2(address, i);
+    else
+        printf("Unknown register for store: %s\n", arg);
+}
+
+//add
+void handle_add(char *arg, int i) {
+    if(arg && strcmp(arg, "r1") == 0)
+        addRegistersR1();
+    else if(arg && strcmp(arg, "r2") == 0)
+        addRegistersR2();
+    else
+        printf("Unknown register for add: %s\n", arg);
+}
+
+//sub
+void handle_sub(char *arg, int i) {
+    if(arg && strcmp(arg, "r2") == 0)
+        subRegistersR2();
+    else
+        printf("Unknown register for sub: %s\n", arg);
+}
+
+//show
+void handle_show(char *arg, int i) {
+    if(arg && strcmp(arg, "r1") == 0)
+        displayR1();
+    else if(arg && strcmp(arg, "r2") == 0)
+        displayR2();
+    else
+        printf("Unknown register for show: %s\n", arg);
+}
+
+// exiting
+void handle_quit(char *arg, int i) {
+    printf("Exiting...\n");
+    exit(0);
+}
+
+//menu
+void handle_menu(char *arg, int i) {
+    menu();
 }

@@ -29,6 +29,8 @@ int main(){
         Instruction *inst = parseInstruction(input);
         if(inst != NULL)
         {
+            if(inst->handler)
+                inst->handler(inst->arg, inst->i);
             destroy(inst);
         }
         printf("\n");
