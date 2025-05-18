@@ -22,17 +22,20 @@ int validateInput(char *name,char *arg,char *i_str){
     //allLowerCheck(name);
     //allLowerCheck(arg);
 
+    // if no user input print invalid input
     if(name == NULL)
     {
         printf("Invalid Input!\n");
         return 0;
     }
 
+    // show menu
     if(strcmp(name, "menu") == 0)
     {
         menu();
     }
 
+    // exiting program functionality
     if(strcmp(name, "q") == 0 || strcmp(name, "Q") == 0 || strcmp(name, "quit") == 0)
     {
         printf("Exiting...\n");
@@ -75,6 +78,7 @@ int validateInput(char *name,char *arg,char *i_str){
                 //subRegistersR2();
             }
         }
+        //functionality for show R1 and R2
         if(strcmp(name, "show") == 0)
         {
             if(strcmp(arg, "r1") == 0)
