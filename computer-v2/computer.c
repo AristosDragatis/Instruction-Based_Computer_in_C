@@ -10,6 +10,7 @@
 int **address = NULL;
 char *R1 = NULL;
 char *R2 = NULL;
+int flag = 0; 
 
 void menu()
 {
@@ -141,8 +142,10 @@ void destroy(Instruction *inst){
     free(inst);
 }
 
+// booting the "computer"
 void boot()
 {
+    
     unsigned int seed = time(NULL);
     printf("Booting...\n");
 
@@ -282,7 +285,14 @@ void allLowerCheck(char *x)
 }
 
 // handler function implementations
-void handle_boot(char *arg, int i) { boot(); }
+void handle_boot(char *arg, int i) { 
+    if(flag != 1){
+        flag = 1;
+        boot(); 
+    }else{
+        printf("Already booted..\n");
+    }
+}
 void handle_mem(char *arg, int i) { displayMemory(address); }
 
 //load
@@ -336,6 +346,7 @@ void handle_show(char *arg, int i) {
 // exiting
 void handle_quit(char *arg, int i) {
     printf("Exiting...\n");
+    flag = 0;
     exit(0);
 }
 
