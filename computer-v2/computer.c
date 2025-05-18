@@ -6,6 +6,10 @@
 #define MAX_INPUT_SIZE 100
 
 
+int **address = NULL;
+char *R1 = NULL;
+char *R2 = NULL;
+
 void menu()
 {
     printf("1)Boot\n2)Memory\n3)Load R[1 or 2]\n4)Store R[1 or 2]\n5)Add/Sub R[1 or 2]\n6)Show R[1 or 2]\n");
@@ -46,12 +50,21 @@ int validateInput(char *name,char *arg,char *i_str){
         {
             printf("boot and mem do not require any other tokens\n");
             return 0;
+        }else
+        {
+            if(strcmp(name, "boot") == 0)
+            {
+                boot();
+            }
+            else if(strcmp(name, "mem") == 0)
+            {
+                displayMemory(address);
+            }
         }
     }
     return 1;
 
 }
-
 
 Instruction *parseInstruction(char *input){
 
@@ -84,7 +97,7 @@ Instruction *createInstruction(char *name, char *arg, int i)
     assert(inst != NULL);
 
     inst->name = strdup(name);
-    inst->arg = strdup(arg);
+    inst->arg = arg ? strdup(arg): NULL; // Only strdup if arg is not NULL
     inst->i = i;
     inst->handler = NULL;
 
@@ -106,15 +119,54 @@ Instruction *createInstruction(char *name, char *arg, int i)
 
 void printInstruction(Instruction *inst){
     printf("User entered: ");
-    printf("%s %s %d\n", inst->name, inst->arg, inst->i);
+    if(inst->arg)
+        printf("%s %s %d\n", inst->name, inst->arg, inst->i);
+    else
+        printf("%s\n", inst->name);
 }
 
+// Function to destroy the instruction object
 void destroy(Instruction *inst){
     assert(inst != NULL);
 
     free(inst->name);
     free(inst->arg);
     free(inst);
+}
+
+void boot()
+{
+    printf("Booting...\n");
+    address = malloc(10 * sizeof(int*));
+    for(int i=0;i<10;i++)
+    {
+        address[i] = malloc(10 * sizeof(int));
+        for(int j=0;j<10;j++)
+        {
+            address[i][j] = 0;
+        }
+    }
+    R1 = malloc(10 * sizeof(char));
+    R2 = malloc(10 * sizeof(char));
+    for(int i=0;i<10;i++)
+    {
+        R1[i] = 0;
+        R2[i] = 0;
+    }
+    printf("Boot complete.\n");
+}
+
+void displayMemory(int **address)
+{
+    printf("Memory:\n");
+    for(int i=0;i<10;i++)
+    {
+        for(int j=0;j<10;j++)
+        {
+            printf("%d ", address[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 void allLowerCheck(char *x)

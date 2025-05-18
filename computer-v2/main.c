@@ -9,20 +9,29 @@
 int main(){
     char input[MAX_INPUT_SIZE];
 
-    menu();
-    printf("Enter instruction: ");
+    while(1)
+    {
+        menu();
+        printf("Enter instruction: ");
 
-    if(fgets(input, sizeof(input), stdin) == NULL)
-    {
-        perror("Input Error");
-        exit(EXIT_FAILURE);
-    }
-    input[strcspn(input, "\n")] = '\0'; // cut \n at the end
-    Instruction *inst = parseInstruction(input);
-    if(inst != NULL)
-    {
-        printInstruction(inst); 
-        destroy(inst);
+        if(fgets(input, sizeof(input), stdin) == NULL)
+        {
+            perror("Input Error");
+            exit(EXIT_FAILURE);
+        }
+
+        if(strlen(input) == 0) {
+            printf("No input entered. Please try again.\n");
+        }
+
+        // Remove newline character from input
+        input[strcspn(input, "\n")] = '\0'; // cut \n at the end
+        Instruction *inst = parseInstruction(input);
+        if(inst != NULL)
+        {
+            printInstruction(inst); 
+            destroy(inst);
+        }
     }
     return 0;
 }
