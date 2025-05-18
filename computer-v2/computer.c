@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
-#define MAX_INPUT_SIZE 100
+#include <time.h>
 
+#define MAX_INPUT_SIZE 100
 
 int **address = NULL;
 char *R1 = NULL;
@@ -12,10 +13,11 @@ char *R2 = NULL;
 
 void menu()
 {
-    printf("1)Boot\n2)Memory\n3)Load R[1 or 2]\n4)Store R[1 or 2]\n5)Add/Sub R[1 or 2]\n6)Show R[1 or 2]\n");
+    printf("1)Boot\n2)Memory\n3)Load R[1 or 2]\n4)Store R[1 or 2]\n5)Add/Sub R[1 or 2]\n6)Show R[1 or 2]\n7)Quit (Q or q)\n");
 }
 
 
+// validate user input 
 int validateInput(char *name,char *arg,char *i_str){
     //allLowerCheck(name);
     //allLowerCheck(arg);
@@ -26,6 +28,7 @@ int validateInput(char *name,char *arg,char *i_str){
         return 0;
     }
 
+    // load and store 
     if(strcmp(name, "load") == 0 || strcmp(name, "store") == 0)
     {
         if(arg == NULL || i_str == NULL)
@@ -35,6 +38,7 @@ int validateInput(char *name,char *arg,char *i_str){
         }
     }
 
+    // add, sub and show
     if(strcmp(name, "add") == 0 || strcmp(name, "sub") == 0 || strcmp(name, "show") == 0)
     {
         if(arg == NULL || i_str != NULL)
@@ -42,8 +46,27 @@ int validateInput(char *name,char *arg,char *i_str){
             printf("ADD, SUB, SHOW require 2 tokens eg.[add r1]");
             return 0;
         }
+        if(strcmp(name, "add") == 0)
+        {
+            if(strcmp(arg, "r1") == 0){
+                //addRegistersR1();
+            }
+            else if(strcmp(arg, "r2") == 0){
+                //addRegistersR2();
+            }
+        }
+        if(strcmp(name, "sub") == 0)
+        {
+            if(strcmp(arg, "r1") == 0){
+                //subRegistersR1();
+            }
+            else if(strcmp(arg, "r2") == 0){
+                //subRegistersR2();
+            }
+        }
     }
 
+    // boot and mem
     if(strcmp(name, "boot") == 0 || strcmp(name, "mem") == 0)
     {
         if(arg != NULL || i_str != NULL)
@@ -101,24 +124,12 @@ Instruction *createInstruction(char *name, char *arg, int i)
     inst->i = i;
     inst->handler = NULL;
 
-
-    if (strcmp(name, "boot") == 0) {
-        inst->handler = boot;
-    } else if (strcmp(name, "load") == 0) {
-        if (strcmp(arg, "r1") == 0) inst->handler = loadR1;
-        else if (strcmp(arg, "r2") == 0) inst->handler = loadR2;
-    } else if (strcmp(name, "store") == 0) {
-        if (strcmp(arg, "r1") == 0) inst->handler = storeR1;
-        else if (strcmp(arg, "r2") == 0) inst->handler = storeR2;
-    }
-
     return inst;
 }
 
 
 
 void printInstruction(Instruction *inst){
-    printf("User entered: ");
     if(inst->arg)
         printf("%s %s %d\n", inst->name, inst->arg, inst->i);
     else
@@ -136,14 +147,17 @@ void destroy(Instruction *inst){
 
 void boot()
 {
+    unsigned int seed = time(NULL);
     printf("Booting...\n");
+    // allocating memory space for address 
     address = malloc(10 * sizeof(int*));
     for(int i=0;i<10;i++)
     {
         address[i] = malloc(10 * sizeof(int));
         for(int j=0;j<10;j++)
         {
-            address[i][j] = 0;
+            // fill address with random 0 and 1 numbers 
+            address[i][j] = rand_r(&seed) % 2;
         }
     }
     R1 = malloc(10 * sizeof(char));
@@ -169,6 +183,24 @@ void displayMemory(int **address)
     }
 }
 
+
+void displayR1()
+{
+    for(int i=0;i<10;i++)
+    {
+        printf("%4d\n", R1[i]);
+    }
+
+}
+
+void displayR2()
+{
+    for(int i=0;i<10;i++)
+    {
+        printf("%d\n", R2[i]);
+    }
+
+}
 void allLowerCheck(char *x)
 {
     int size = strlen(x);
