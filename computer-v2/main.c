@@ -9,9 +9,9 @@
 int main(){
     char input[MAX_INPUT_SIZE];
 
+    menu();
     while(1)
     {
-        menu();
         printf("Enter instruction: ");
 
         if(fgets(input, sizeof(input), stdin) == NULL)
@@ -32,6 +32,7 @@ int main(){
             printInstruction(inst); 
             destroy(inst);
         }
+        printf("\n");
     }
     return 0;
 }

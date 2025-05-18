@@ -13,7 +13,7 @@ char *R2 = NULL;
 
 void menu()
 {
-    printf("1)Boot\n2)Memory\n3)Load R[1 or 2]\n4)Store R[1 or 2]\n5)Add/Sub R[1 or 2]\n6)Show R[1 or 2]\n7)Quit (Q or q)\n");
+    printf("1)Boot\n2)Memory\n3)Load R[1 or 2]\n4)Store R[1 or 2]\n5)Add/Sub R[1 or 2]\n6)Show R[1 or 2]\n7)Quit (Q or q)\n8)Menu\n");
 }
 
 
@@ -26,6 +26,17 @@ int validateInput(char *name,char *arg,char *i_str){
     {
         printf("Invalid Input!\n");
         return 0;
+    }
+
+    if(strcmp(name, "menu") == 0)
+    {
+        menu();
+    }
+
+    if(strcmp(name, "q") == 0 || strcmp(name, "Q") == 0 || strcmp(name, "quit") == 0)
+    {
+        printf("Exiting...\n");
+        exit(-1);
     }
 
     // load and store 
@@ -62,6 +73,17 @@ int validateInput(char *name,char *arg,char *i_str){
             }
             else if(strcmp(arg, "r2") == 0){
                 //subRegistersR2();
+            }
+        }
+        if(strcmp(name, "show") == 0)
+        {
+            if(strcmp(arg, "r1") == 0)
+            {
+                displayR1();
+            }
+            else if(strcmp(arg, "r2") == 0)
+            {
+                displayR2();
             }
         }
     }
@@ -164,8 +186,9 @@ void boot()
     R2 = malloc(10 * sizeof(char));
     for(int i=0;i<10;i++)
     {
-        R1[i] = 0;
-        R2[i] = 0;
+        seed = time(NULL) + i;
+        R1[i] = rand_r(&seed) % 2;
+        R2[i] = rand_r(&seed) % 2;
     }
     printf("Boot complete.\n");
 }
@@ -184,23 +207,28 @@ void displayMemory(int **address)
 }
 
 
+// functions to display registers R1 and R2
 void displayR1()
 {
+    printf("R1= ");
     for(int i=0;i<10;i++)
     {
-        printf("%4d\n", R1[i]);
+        printf("%2d", R1[i]);
     }
-
+    printf(" \n");
 }
 
 void displayR2()
 {
+    printf("R2= ");
     for(int i=0;i<10;i++)
     {
-        printf("%d\n", R2[i]);
+        printf("%2d", R2[i]);
     }
-
+    printf(" \n");
 }
+
+
 void allLowerCheck(char *x)
 {
     int size = strlen(x);
