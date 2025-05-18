@@ -180,10 +180,3 @@ void allLowerCheck(char *x)
         }
     }
 }
-
-void boot(){
-    srand((unsigned)time(NULL));
-    char **address = 
-
-}
-
