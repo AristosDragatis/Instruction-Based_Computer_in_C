@@ -6,9 +6,9 @@ extern char *R1;
 extern char *R2;
 
 typedef struct {
-    char *name;                            // eg. "LOAD"
-    char *arg;                             // eg. "R1"
-    int i;                                 // eg. 3
+    char *name;                            // "LOAD"
+    char *arg;                             // "R1"
+    int i;                                 // 3
     void (*handler)(char *, int);         // pointer function
 } Instruction;
 
