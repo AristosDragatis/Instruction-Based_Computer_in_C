@@ -180,6 +180,8 @@ void boot()
             address[i][j] = rand_r(&seed) % 2;
         }
     }
+
+    // 
     R1 = malloc(10 * sizeof(char));
     R2 = malloc(10 * sizeof(char));
     for(int i=0;i<10;i++)
@@ -293,6 +295,8 @@ void handle_boot(char *arg, int i) {
         printf("Already booted..\n");
     }
 }
+
+// memory handler 
 void handle_mem(char *arg, int i) { displayMemory(address); }
 
 //load
