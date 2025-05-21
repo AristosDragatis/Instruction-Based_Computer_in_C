@@ -67,6 +67,7 @@ int validateInput(char *name, char *arg, char *i_str) {
     return 0;
 }
 
+// parsing inst with the help of strtok 
 Instruction *parseInstruction(char *input){
 
     char tempInput[MAX_INPUT_SIZE];
@@ -229,9 +230,12 @@ void displayR2()
 }
 
 
+// load address from memory and store it into R1 or R2
 int loadR1(int **address, int num) {
-    // TODO: implement logic
+    // TODO: implement LOAD 
+
     printf("Called loadR1 with num=%d\n", num);
+
     return 0;
 }
 
@@ -299,7 +303,7 @@ void handle_boot(char *arg, int i) {
 // memory handler 
 void handle_mem(char *arg, int i) { displayMemory(address); }
 
-//load
+//load handler
 void handle_load(char *arg, int i){
     if(arg && strcmp(arg, "r1") == 0)
         loadR1(address, i);
@@ -309,7 +313,7 @@ void handle_load(char *arg, int i){
         printf("Unknown register for load: %s\n", arg);
 }
 
-//store 
+//store handler
 void handle_store(char *arg, int i) {
     if(arg && strcmp(arg, "r1") == 0)
         storeR1(address, i);
