@@ -228,8 +228,15 @@ void displayR2()
 
 
 int loadR1(int **address, int num) {
-    // TODO: implement logic
+    // todo : implement logic for showing current memory 
     printf("Called loadR1 with num=%d\n", num);
+    for(int i=0;i<10;i++)
+    {
+        for(int j=0;j<10;j++)
+        {
+            R1[i] = address[num][i];
+        }
+    }
     return 0;
 }
 
