@@ -149,7 +149,7 @@ void boot()
     unsigned int seed = time(NULL);
     printf("Booting...\n");
 
-    // Free previous memory if already allocated
+    // Free previous memory if already allocated *IMPORTANT 
     if(address){
         for(int i=0;i<10;i++)
         {
@@ -180,6 +180,7 @@ void boot()
             address[i][j] = rand_r(&seed) % 2;
         }
     }
+    // allocating memory for both registers 
     R1 = malloc(10 * sizeof(char));
     R2 = malloc(10 * sizeof(char));
     for(int i=0;i<10;i++)
@@ -240,32 +241,69 @@ int loadR1(int **address, int num) {
     return 0;
 }
 
+// load 
 int loadR2(int **address, int num) {
-    // TODO: implement logic
     printf("Called loadR2 with num=%d\n", num);
+    for(int i=0;i<10;i++)
+    {
+        for(int j=0;j<10;j++)
+        {
+            R2[i] = address[num][i];
+        }
+    }
     return 0;
 }
 
+// storing from register to num memory location
 int storeR1(int **address, int num) {
-    // TODO: implement logic
     printf("Called storeR1 with num=%d\n", num);
+    for(int i=0;i<10;i++)
+    {
+        address[num][i] = R1[i];
+    }
     return 0;
 }
 
+// storing from register R2 to num memory location 
 int storeR2(int **address, int num) {
-    // TODO: implement logic
     printf("Called storeR2 with num=%d\n", num);
+    for(int i=0;i<10;i++)
+    {
+        address[num][i] = R1[i];
+    }
     return 0;
 }
 
+// add logic 
 void addRegistersR1() {
-    // TODO: implement logic
+    int carry = 0;
     printf("Called addRegistersR1\n");
+    for(int i=9;i>=0;i--){
+        int sum = R1[i] + R2[i] + carry;
+        R1[i] = sum % 2;
+        carry = sum / 2;
+    }
+    printf("R1 after addition: ");
+    for(int i=0;i<10;i++)
+    {
+        printf("%2d", R1[i]);
+    }
 }
 
 void addRegistersR2() {
-    // TODO: implement logic
+    // keep the carry from the previous addition in case of 1+1
+    int carry = 0;
     printf("Called addRegistersR2\n");
+    for(int i=9;i>=0;i--){
+        int sum = R2[i] + R1[i] + carry;
+        R2[i] = sum % 2;
+        carry = sum / 2;
+    }
+    printf("R2 after addition: ");
+    for(int i=0;i<10;i++)
+    {
+        printf("%2d", R2[i]);
+    }
 }
 
 void subRegistersR1() {
